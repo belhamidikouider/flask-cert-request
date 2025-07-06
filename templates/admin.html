@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة التحكم - الطلبات</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: right;
+        }
+        th {
+            background-color: #eee;
+        }
+        .logout {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>لوحة التحكم - جميع الطلبات</h1>
+    <table>
+        <tr>
+            <th>الرقم</th>
+            <th>الاسم</th>
+            <th>اللقب</th>
+            <th>تاريخ الميلاد</th>
+            <th>مكان الميلاد</th>
+            <th>اسم الأب</th>
+            <th>اسم الأم</th>
+            <th>الرتبة</th>
+            <th>الهاتف</th>
+            <th>البريد الإلكتروني</th>
+        </tr>
+        {% for req in requests %}
+        <tr>
+            <td>{{ req[0] }}</td>
+            <td>{{ req[1] }}</td>
+            <td>{{ req[2] }}</td>
+            <td>{{ req[3] }}</td>
+            <td>{{ req[4] }}</td>
+            <td>{{ req[5] }}</td>
+            <td>{{ req[6] }}</td>
+            <td>{{ req[7] }}</td>
+            <td>{{ req[8] }}</td>
+            <td>{{ req[9] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="logout">
+        <a href="{{ url_for('logout') }}">تسجيل الخروج</a>
+    </div>
+</body>
+</html>

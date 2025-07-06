@@ -1,69 +1,52 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>طلب شهادة عمل</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      text-align: right;
-      direction: rtl;
-    }
-    h1, h2, h3 {
-      color: #333;
-    }
-    form {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-    }
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      box-sizing: border-box;
-    }
-    button {
-      margin-top: 15px;
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>برنامج طلب شهادة عمل عن بعد</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        form { display: inline-block; text-align: right; margin-top: 20px; }
+        input { width: 300px; padding: 5px; margin: 5px 0; }
+        button { padding: 10px 20px; }
+    </style>
 </head>
 <body>
-  <div class="header">
     <h2>ولاية سعيدة</h2>
     <h3>دائرة الحساسنة</h3>
     <h3>بلدية المعمورة</h3>
     <h1>برنامج طلب شهادة عمل عن بعد</h1>
-    <h3>برنامج تجريبي من إنشاء الموظف بلحميدي قويدر</h3>
-  </div>
+    <p>برنامج تجريبي من إنشاء الموظف بلحميدي قويدر</p>
 
-  <form action="/submit" method="post">
-    <label for="first_name">الاسم:</label>
-    <input type="text" id="first_name" name="first_name" required>
+    <form method="post">
+        <label>الاسم:</label><br>
+        <input type="text" name="first_name" required><br>
 
-    <label for="last_name">اللقب:</label>
-    <input type="text" id="last_name" name="last_name" required>
+        <label>اللقب:</label><br>
+        <input type="text" name="last_name" required><br>
 
-    <label for="birth_date">تاريخ الميلاد:</la_
+        <label>تاريخ الميلاد:</label><br>
+        <input type="date" name="birth_date" required><br>
+
+        <label>مكان الميلاد:</label><br>
+        <input type="text" name="birth_place" required><br>
+
+        <label>اسم الأب:</label><br>
+        <input type="text" name="father_name" required><br>
+
+        <label>اسم ولقب الأم:</label><br>
+        <input type="text" name="mother_name" required><br>
+
+        <label>الرتبة:</label><br>
+        <input type="text" name="position" required><br>
+
+        <label>رقم الهاتف:</label><br>
+        <input type="text" name="phone" required><br>
+
+        <label>البريد الإلكتروني:</label><br>
+        <input type="email" name="email" required><br><br>
+
+        <button type="submit">إرسال الطلب</button>
+    </form>
+</body>
+</html>
 
