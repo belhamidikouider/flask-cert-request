@@ -47,6 +47,7 @@ def index():
         return 'تم إرسال طلبك بنجاح!'
     return render_template('index.html')
 
+
 # تسجيل دخول المسؤول
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -61,6 +62,7 @@ def login():
             error = 'بيانات الدخول غير صحيحة'
     return render_template('login.html', error=error)
 
+
 # لوحة التحكم
 @app.route('/admin')
 def admin():
@@ -73,11 +75,26 @@ def admin():
     conn.close()
     return render_template('admin.html', requests=requests_data)
 
+
+# حذف طلب محدد
+@app.route('/delete/<int:request_id>', methods=['POST'])
+def delete_request(request_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    conn = sqlite3.connect('requests.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM requests WHERE id = ?', (request_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('admin'))
+
+
 # تسجيل الخروج
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
     return redirect(url_for('login'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
