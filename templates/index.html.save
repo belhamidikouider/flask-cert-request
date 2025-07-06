@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>طلب شهادة عمل</title>
+    <style>
+        body { text-align: center; direction: rtl; font-family: Arial; }
+        form { display: inline-block; text-align: right; }
+        input, button { display: block; margin: 5px auto; width: 250px; }
+    </style>
+</head>
+<body>
+    <h1>برنامج طلب شهادة عمل عن بعد</h1>
+    <p>تتبع الطلب</p>
+    <form method="POST">
+        <input type="text" name="track_phone" placeholder="رقم الهاتف">
+        <button type="submit" name="track">تتبع</button>
+    </form>
+    {% if track_result %}
+        <p>{{ track_result }}</p>
+    {% endif %}
+
+    <p>تقديم طلب جديد</p>
+    <form method="POST">
+        <input type="text" name="first_name" placeholder="الاسم" required>
+        <input type="text" name="last_name" placeholder="اللقب" required>
+        <input type="date" name="birth_date" required>
+        <input type="text" name="birth_place" placeholder="مكان الميلاد" required>
+        <input type="text" name="father_name" placeholder="اسم الأب" required>
+        <input type="text" name="mother_name" placeholder="اسم الأم" required>
+        <input type="text" name="position" placeholder="الوظيفة" required>
+        <input type="text" name="phone" placeholder="رقم الهاتف" required>
+        <input type="email" name="email" placeholder="البريد الإلكتروني">
+        <button type="submit" name="submit">إرسال الطلب</button>
+    </form>
+</body>
+</html>
+

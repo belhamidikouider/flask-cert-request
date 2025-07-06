@@ -2,69 +2,67 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>لوحة التحكم</title>
+    <title>لوحة الإدارة - إدارة الطلبات</title>
     <style>
+        body {
+            font-family: Arial;
+            direction: rtl;
+            text-align: center;
+        }
         table {
-            width: 100%;
+            margin: auto;
             border-collapse: collapse;
-            margin-top: 20px;
+            width: 90%;
+        }
+        table, th, td {
+            border: 1px solid black;
         }
         th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: center;
+            padding: 10px;
         }
-        th {
-            background: #eee;
+        form {
+            display: inline-block;
         }
-        .header {
-            text-align: center;
+        select, button {
+            padding: 5px;
+        }
+        a {
+            margin: 10px;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>ولاية سعيدة</h2>
-        <h3>دائرة الحساسنة</h3>
-        <h4>بلدية المعمورة</h4>
-        <p>برنامج طلب شهادة عمل عن بعد</p>
-        <p>برنامج تجريبي من إنشاء الموظف <strong>بلحميدي قويدر</strong></p>
-        <a href="{{ url_for('logout') }}">تسجيل الخروج</a>
-    </div>
-
+    <h1>لوحة إدارة الطلبات</h1>
+    <a href="{{ url_for('logout') }}">تسجيل الخروج</a>
     <table>
-        <thead>
-            <tr>
-                <th>رقم</th>
-                <th>الاسم</th>
-                <th>اللقب</th>
-                <th>تاريخ الميلاد</th>
-                <th>مكان الميلاد</th>
-                <th>الوظيفة</th>
-                <th>الهاتف</th>
-                <th>البريد</th>
-                <th>إجراء</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for req in requests %}
-            <tr>
-                <td>{{ req[0] }}</td>
-                <td>{{ req[1] }}</td>
-                <td>{{ req[2] }}</td>
-                <td>{{ req[3] }}</td>
-                <td>{{ req[4] }}</td>
-                <td>{{ req[7] }}</td>
-                <td>{{ req[8] }}</td>
-                <td>{{ req[9] }}</td>
-                <td>
-                    <form action="{{ url_for('delete_request', request_id=req[0]) }}" method="post" onsubmit="return confirm('هل أنت متأكد أنك عالجت هذا الطلب؟');">
-                        <button type="submit">✅ تمت المعالجة</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
+        <tr>
+            <th>رقم</th>
+            <th>الاسم</th>
+            <th>اللقب</th>
+            <th>رقم الهاتف</th>
+            <th>الحالة الحالية</th>
+            <th>تغيير الحالة</th>
+        </tr>
+        {% for req in requests %}
+        <tr>
+            <td>{{ req[0] }}</td>
+            <td>{{ req[1] }}</td>
+            <td>{{ req[2] }}</td>
+            <td>{{ req[3] }}</td>
+            <td>{{ req[4] }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('update_status', request_id=req[0]) }}">
+                    <select name="new_status">
+                        <option value="قيد المعالجة" {% if req[4] == 'قيد المعالجة' %}selected{% endif %}>قيد المعالجة</option>
+                        <option value="جاهزة للاستلام" {% if req[4] == 'جاهزة للاستلام' %}selected{% endif %}>جاهزة للاستلام</option>
+                        <option value="مرفوضة" {% if req[4] == 'مرفوضة' %}selected{% endif %}>مرفوضة</option>
+                    </select>
+                    <button type="submit">تحديث الحالة</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
     </table>
 </body>
 </html>

@@ -1,52 +1,97 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>برنامج طلب شهادة عمل عن بعد</title>
+    <title>طلب شهادة عمل عن بعد</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        form { display: inline-block; text-align: right; margin-top: 20px; }
-        input { width: 300px; padding: 5px; margin: 5px 0; }
-        button { padding: 10px 20px; }
+        body {
+            text-align: center;
+            direction: rtl;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        h1, h2, h3, p {
+            margin: 10px 0;
+        }
+        input, button {
+            display: block;
+            margin: 10px auto;
+            width: 90%;
+            padding: 8px;
+            font-size: 16px;
+        }
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #e2e2e2;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
     </style>
 </head>
 <body>
-    <h2>ولاية سعيدة</h2>
-    <h3>دائرة الحساسنة</h3>
-    <h3>بلدية المعمورة</h3>
-    <h1>برنامج طلب شهادة عمل عن بعد</h1>
-    <p>برنامج تجريبي من إنشاء الموظف بلحميدي قويدر</p>
+    <div class="container">
+        <h2>الجمهورية الجزائرية الديمقراطية الشعبية</h2>
+        <h3>وزارة الداخلية و الجماعات المحلية و التهيئة العمرانية</h3>
+        <h3>ولاية سعيدة</h3>
+        <h3>دائرة الحساسنة</h3>
+        <h3>بلدية المعمورة</h3>
+        <h1>برنامج طلب شهادة عمل عن بعد</h1>
+        <p><small>تصميم بلحميدي قويدر - نسخة تجريبية</small></p>
 
-    <form method="post">
-        <label>الاسم:</label><br>
-        <input type="text" name="first_name" required><br>
+        <h2>تتبع الطلب</h2>
+        <form method="POST">
+            <input type="text" name="track_phone" placeholder="رقم الهاتف">
+            <button type="submit" name="track">تتبع</button>
+        </form>
 
-        <label>اللقب:</label><br>
-        <input type="text" name="last_name" required><br>
+        {% if track_result %}
+            <div class="result">
+                {% if track_result is string %}
+                    <p>{{ track_result }}</p>
+                {% else %}
+                    <p>تم العثور على طلب:</p>
+                    <ul style="list-style:none; padding:0;">
+                        <li><strong>الاسم:</strong> {{ track_result[1] }} {{ track_result[2] }}</li>
+                        <li><strong>تاريخ الميلاد:</strong> {{ track_result[3] }}</li>
+                        <li><strong>مكان الميلاد:</strong> {{ track_result[4] }}</li>
+                        <li><strong>الوظيفة:</strong> {{ track_result[7] }}</li>
+                        <li><strong>رقم الهاتف:</strong> {{ track_result[8] }}</li>
+                    </ul>
+                {% endif %}
+            </div>
+        {% endif %}
 
-        <label>تاريخ الميلاد:</label><br>
-        <input type="date" name="birth_date" required><br>
-
-        <label>مكان الميلاد:</label><br>
-        <input type="text" name="birth_place" required><br>
-
-        <label>اسم الأب:</label><br>
-        <input type="text" name="father_name" required><br>
-
-        <label>اسم ولقب الأم:</label><br>
-        <input type="text" name="mother_name" required><br>
-
-        <label>الرتبة:</label><br>
-        <input type="text" name="position" required><br>
-
-        <label>رقم الهاتف:</label><br>
-        <input type="text" name="phone" required><br>
-
-        <label>البريد الإلكتروني:</label><br>
-        <input type="email" name="email" required><br><br>
-
-        <button type="submit">إرسال الطلب</button>
-    </form>
+        <h2>تقديم طلب جديد</h2>
+        <form method="POST">
+            <input type="text" name="first_name" placeholder="الاسم" required>
+            <input type="text" name="last_name" placeholder="اللقب" required>
+            <input type="date" name="birth_date" required>
+            <input type="text" name="birth_place" placeholder="مكان الميلاد" required>
+            <input type="text" name="father_name" placeholder="اسم الأب" required>
+            <input type="text" name="mother_name" placeholder="اسم الأم" required>
+            <input type="text" name="position" placeholder="الوظيفة" required>
+            <input type="text" name="phone" placeholder="رقم الهاتف" required>
+            <input type="email" name="email" placeholder="البريد الإلكتروني">
+            <button type="submit" name="submit">إرسال الطلب</button>
+        </form>
+    </div>
 </body>
 </html>
 

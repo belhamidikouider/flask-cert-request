@@ -4,51 +4,65 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
-# الصفحة الرئيسية - نموذج الطلب
+# الصفحة الرئيسية
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    track_result = None
     if request.method == 'POST':
-        data = {
-            'first_name': request.form['first_name'],
-            'last_name': request.form['last_name'],
-            'birth_date': request.form['birth_date'],
-            'birth_place': request.form['birth_place'],
-            'father_name': request.form['father_name'],
-            'mother_name': request.form['mother_name'],
-            'position': request.form['position'],
-            'phone': request.form['phone'],
-            'email': request.form['email']
-        }
+        if 'track' in request.form:
+            # تتبع الطلب
+            phone = request.form['track_phone']
+            conn = sqlite3.connect('requests.db')
+            conn.row_factory = sqlite3.Row  # مهم جداً ليقرأ بالأسماء
+            c = conn.cursor()
+            c.execute('SELECT * FROM requests WHERE phone = ?', (phone,))
+            result = c.fetchone()
+            conn.close()
+            if result:
+                track_result = f"""
+                تم العثور على طلب:
+                الاسم: {result['first_name']} {result['last_name']}
+                الوظيفة: {result['position']}
+                الحالة: {result['status']}
+                """
+            else:
+                track_result = 'لم يتم العثور على طلب برقم الهاتف هذا.'
+        elif 'submit' in request.form:
+            phone = request.form['phone']
+            conn = sqlite3.connect('requests.db')
+            c = conn.cursor()
+            # تحقق إن كان موجود
+            c.execute('SELECT * FROM requests WHERE phone = ?', (phone,))
+            existing = c.fetchone()
+            if existing:
+                conn.close()
+                return 'لقد قمت بإرسال طلب بالفعل بهذا الرقم.'
+            # تسجيل طلب جديد
+            data = {
+                'first_name': request.form['first_name'],
+                'last_name': request.form['last_name'],
+                'birth_date': request.form['birth_date'],
+                'birth_place': request.form['birth_place'],
+                'father_name': request.form['father_name'],
+                'mother_name': request.form['mother_name'],
+                'position': request.form['position'],
+                'phone': phone,
+                'email': request.form['email'],
+                'status': 'قيد المعالجة'
+            }
+            c.execute('''
+                INSERT INTO requests 
+                (first_name, last_name, birth_date, birth_place, father_name, mother_name, position, phone, email, status)
+                VALUES 
+                (:first_name, :last_name, :birth_date, :birth_place, :father_name, :mother_name, :position, :phone, :email, :status)
+            ''', data)
+            conn.commit()
+            conn.close()
+            return 'تم إرسال طلبك بنجاح!'
+    return render_template('index.html', track_result=track_result)
 
-        conn = sqlite3.connect('requests.db')
-        c = conn.cursor()
-        c.execute('''
-            CREATE TABLE IF NOT EXISTS requests (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                first_name TEXT,
-                last_name TEXT,
-                birth_date TEXT,
-                birth_place TEXT,
-                father_name TEXT,
-                mother_name TEXT,
-                position TEXT,
-                phone TEXT,
-                email TEXT
-            )
-        ''')
-        c.execute('''
-            INSERT INTO requests 
-            (first_name, last_name, birth_date, birth_place, father_name, mother_name, position, phone, email)
-            VALUES 
-            (:first_name, :last_name, :birth_date, :birth_place, :father_name, :mother_name, :position, :phone, :email)
-        ''', data)
-        conn.commit()
-        conn.close()
-        return 'تم إرسال طلبك بنجاح!'
-    return render_template('index.html')
 
-
-# تسجيل دخول المسؤول
+# تسجيل الدخول
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -69,21 +83,23 @@ def admin():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     conn = sqlite3.connect('requests.db')
+    conn.row_factory = sqlite3.Row  # أيضاً هنا لسهولة القراءة بالأسماء
     c = conn.cursor()
-    c.execute('SELECT * FROM requests')
+    c.execute('SELECT id, first_name, last_name, phone, status FROM requests')
     requests_data = c.fetchall()
     conn.close()
     return render_template('admin.html', requests=requests_data)
 
 
-# حذف طلب محدد
-@app.route('/delete/<int:request_id>', methods=['POST'])
-def delete_request(request_id):
+# تحديث حالة الطلب
+@app.route('/update_status/<int:request_id>', methods=['POST'])
+def update_status(request_id):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
+    new_status = request.form['new_status']
     conn = sqlite3.connect('requests.db')
     c = conn.cursor()
-    c.execute('DELETE FROM requests WHERE id = ?', (request_id,))
+    c.execute('UPDATE requests SET status = ? WHERE id = ?', (new_status, request_id))
     conn.commit()
     conn.close()
     return redirect(url_for('admin'))
@@ -98,4 +114,3 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
