@@ -1,84 +1,69 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>برنامج طلب شهادة العمل عن بعد</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: right;
-            direction: rtl;
-            background-color: #f7f7f7;
-            padding: 20px;
-        }
-        .container {
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 600px;
-            margin: auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        input[type="text"],
-        input[type="date"],
-        input[type="email"],
-        input[type="tel"] {
-            width: 100%;
-            padding: 10px;
-            margin: 6px 0;
-            box-sizing: border-box;
-        }
-        input[type="submit"] {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        h1, h2, h3 {
-            margin: 5px 0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>طلب شهادة عمل</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      text-align: right;
+      direction: rtl;
+    }
+    h1, h2, h3 {
+      color: #333;
+    }
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 15px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>ولاية سعيدة</h1>
-        <h2>دائرة الحساسنة</h2>
-        <h3>بلدية المعمورة</h3>
-        <h2>برنامج طلب شهادة العمل عن بعد</h2>
-        <p>برنامج تجريبي من إعداد الموظف بلحميدي قويدر</p>
+  <div class="header">
+    <h2>ولاية سعيدة</h2>
+    <h3>دائرة الحساسنة</h3>
+    <h3>بلدية المعمورة</h3>
+    <h1>برنامج طلب شهادة عمل عن بعد</h1>
+    <h3>برنامج تجريبي من إنشاء الموظف بلحميدي قويدر</h3>
+  </div>
 
-        <form action="/submit" method="post">
-            <label>الاسم:</label>
-            <input type="text" name="first_name" required>
+  <form action="/submit" method="post">
+    <label for="first_name">الاسم:</label>
+    <input type="text" id="first_name" name="first_name" required>
 
-            <label>اللقب:</label>
-            <input type="text" name="last_name" required>
+    <label for="last_name">اللقب:</label>
+    <input type="text" id="last_name" name="last_name" required>
 
-            <label>تاريخ الميلاد:</label>
-            <input type="date" name="birth_date" required>
+    <label for="birth_date">تاريخ الميلاد:</la_
 
-            <label>مكان الميلاد:</label>
-            <input type="text" name="birth_place" required>
-
-            <label>اسم الأب:</label>
-            <input type="text" name="father_name" required>
-
-            <label>اسم ولقب الأم:</label>
-            <input type="text" name="mother_name" required>
-
-            <label>الرتبة:</label>
-            <input type="text" name="position" required>
-
-            <label>رقم الهاتف:</label>
-            <input type="tel" name="phone" required>
-
-            <label>البريد الإلكتروني:</label>
-            <input type="email" name="email" required>
-
-            <input type="submit" value="إرسال الطلب">
-        </form>
-    </div>
-</body>
-</html>
