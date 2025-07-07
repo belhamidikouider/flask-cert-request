@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
-import os   # ✅ مهم لقراءة المتغيرات
+import os
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -65,10 +65,8 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        # ✅ قراءة من Environment Variables
         admin_username = os.environ.get('ADMIN_USERNAME')
         admin_password = os.environ.get('ADMIN_PASSWORD')
-
         if username == admin_username and password == admin_password:
             session['logged_in'] = True
             return redirect(url_for('admin'))
@@ -101,7 +99,7 @@ def update_status(request_id):
     conn.close()
     return redirect(url_for('admin'))
 
-# ✅ حذف الطلب
+# حذف الطلب
 @app.route('/delete_request/<int:request_id>', methods=['POST'])
 def delete_request(request_id):
     if not session.get('logged_in'):
