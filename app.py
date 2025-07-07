@@ -101,6 +101,18 @@ def update_status(request_id):
     conn.close()
     return redirect(url_for('admin'))
 
+# ✅ حذف الطلب
+@app.route('/delete_request/<int:request_id>', methods=['POST'])
+def delete_request(request_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    conn = sqlite3.connect('requests.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM requests WHERE id = ?', (request_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('admin'))
+
 # تسجيل الخروج
 @app.route('/logout')
 def logout():
