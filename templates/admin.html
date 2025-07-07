@@ -1,48 +1,36 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>لوحة الإدارة - إدارة الطلبات</title>
+    <title>لوحة التحكم</title>
     <style>
-        body {
-            font-family: Arial;
-            direction: rtl;
-            text-align: center;
-        }
-        table {
-            margin: auto;
-            border-collapse: collapse;
-            width: 90%;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
-        }
-        form {
-            display: inline-block;
-        }
-        select, button {
-            padding: 5px;
-        }
-        a {
-            margin: 10px;
-            display: inline-block;
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; direction: rtl; background-color: #f9f9f9; }
+        table { border-collapse: collapse; width: 100%; background: #fff; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #4CAF50; color: white; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { margin: 5px; }
+        .btn { padding: 5px 10px; margin: 2px; }
+        .btn-update { background-color: #2196F3; color: white; border: none; cursor: pointer; }
+        .btn-delete { background-color: #f44336; color: white; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
-    <h1>لوحة إدارة الطلبات</h1>
-    <a href="{{ url_for('logout') }}">تسجيل الخروج</a>
+    <div class="header">
+        <h1>الجمهورية الجزائرية الديمقراطية الشعبية</h1>
+        <h2>وزارة الداخلية والجماعات المحلية والتهيئة العمرانية</h2>
+        <h3>ولاية سعيدة - دائرة الحساسنة - بلدية المعمورة</h3>
+        <p>برنامج طلب شهادة عمل عن بعد - تصميم بلحميدي قويدر - نسخة تجريبية</p>
+    </div>
+    <h2>لوحة التحكم</h2>
     <table>
         <tr>
             <th>رقم</th>
             <th>الاسم</th>
             <th>اللقب</th>
-            <th>رقم الهاتف</th>
-            <th>الحالة الحالية</th>
-            <th>تغيير الحالة</th>
+            <th>الهاتف</th>
+            <th>الحالة</th>
+            <th>إجراء</th>
         </tr>
         {% for req in requests %}
         <tr>
@@ -52,18 +40,21 @@
             <td>{{ req[3] }}</td>
             <td>{{ req[4] }}</td>
             <td>
-                <form method="POST" action="{{ url_for('update_status', request_id=req[0]) }}">
+                <form action="{{ url_for('update_status', request_id=req[0]) }}" method="post" style="display:inline;">
                     <select name="new_status">
-                        <option value="قيد المعالجة" {% if req[4] == 'قيد المعالجة' %}selected{% endif %}>قيد المعالجة</option>
-                        <option value="جاهزة للاستلام" {% if req[4] == 'جاهزة للاستلام' %}selected{% endif %}>جاهزة للاستلام</option>
-                        <option value="مرفوضة" {% if req[4] == 'مرفوضة' %}selected{% endif %}>مرفوضة</option>
+                        <option value="قيد المعالجة" {% if req[4]=='قيد المعالجة' %}selected{% endif %}>قيد المعالجة</option>
+                        <option value="معالج" {% if req[4]=='معالج' %}selected{% endif %}>معالج</option>
                     </select>
-                    <button type="submit">تحديث الحالة</button>
+                    <button type="submit" class="btn btn-update">تحديث</button>
+                </form>
+                <form action="{{ url_for('delete_request', request_id=req[0]) }}" method="post" style="display:inline;" onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا الطلب؟');">
+                    <button type="submit" class="btn btn-delete">حذف</button>
                 </form>
             </td>
         </tr>
         {% endfor %}
     </table>
+    <p><a href="{{ url_for('logout') }}">تسجيل الخروج</a></p>
 </body>
 </html>
 
