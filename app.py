@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
+import os   # ✅ مهم لقراءة المتغيرات
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -10,10 +11,8 @@ def index():
     track_result = None
     if request.method == 'POST':
         if 'track' in request.form:
-            # تتبع الطلب
             phone = request.form['track_phone']
             conn = sqlite3.connect('requests.db')
-            conn.row_factory = sqlite3.Row  # مهم جداً ليقرأ بالأسماء
             c = conn.cursor()
             c.execute('SELECT * FROM requests WHERE phone = ?', (phone,))
             result = c.fetchone()
@@ -21,9 +20,9 @@ def index():
             if result:
                 track_result = f"""
                 تم العثور على طلب:
-                الاسم: {result['first_name']} {result['last_name']}
-                الوظيفة: {result['position']}
-                الحالة: {result['status']}
+                الاسم: {result[1]} {result[2]}
+                الوظيفة: {result[7]}
+                الحالة: {result[11]}
                 """
             else:
                 track_result = 'لم يتم العثور على طلب برقم الهاتف هذا.'
@@ -31,13 +30,11 @@ def index():
             phone = request.form['phone']
             conn = sqlite3.connect('requests.db')
             c = conn.cursor()
-            # تحقق إن كان موجود
             c.execute('SELECT * FROM requests WHERE phone = ?', (phone,))
             existing = c.fetchone()
             if existing:
                 conn.close()
                 return 'لقد قمت بإرسال طلب بالفعل بهذا الرقم.'
-            # تسجيل طلب جديد
             data = {
                 'first_name': request.form['first_name'],
                 'last_name': request.form['last_name'],
@@ -61,7 +58,6 @@ def index():
             return 'تم إرسال طلبك بنجاح!'
     return render_template('index.html', track_result=track_result)
 
-
 # تسجيل الدخول
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -69,13 +65,16 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username == 'admin' and password == 'password':
+        # ✅ قراءة من Environment Variables
+        admin_username = os.environ.get('ADMIN_USERNAME')
+        admin_password = os.environ.get('ADMIN_PASSWORD')
+
+        if username == admin_username and password == admin_password:
             session['logged_in'] = True
             return redirect(url_for('admin'))
         else:
             error = 'بيانات الدخول غير صحيحة'
     return render_template('login.html', error=error)
-
 
 # لوحة التحكم
 @app.route('/admin')
@@ -83,15 +82,13 @@ def admin():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     conn = sqlite3.connect('requests.db')
-    conn.row_factory = sqlite3.Row  # أيضاً هنا لسهولة القراءة بالأسماء
     c = conn.cursor()
     c.execute('SELECT id, first_name, last_name, phone, status FROM requests')
     requests_data = c.fetchall()
     conn.close()
     return render_template('admin.html', requests=requests_data)
 
-
-# تحديث حالة الطلب
+# تحديث الحالة
 @app.route('/update_status/<int:request_id>', methods=['POST'])
 def update_status(request_id):
     if not session.get('logged_in'):
@@ -104,13 +101,11 @@ def update_status(request_id):
     conn.close()
     return redirect(url_for('admin'))
 
-
 # تسجيل الخروج
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
     return redirect(url_for('login'))
-
 
 if __name__ == "__main__":
     app.run(debug=True)
